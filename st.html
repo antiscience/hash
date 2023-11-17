@@ -1,0 +1,79 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <title>CompTIA Test Prep</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="">
+  <meta property="og:type" content="">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+
+  <link rel="icon" href="fav/favicon.ico" sizes="any">
+
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/light.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#fafafa">
+
+  <style>
+    #graph {
+      width: 800px; 
+      height: 600px;
+      border: 10px solid #ECEFF1;
+    }
+  </style>
+</head>
+
+<body class="">
+  <div class="content">
+  <header>
+    <h1>&Hopf;&#8525;&planck;</h1>
+    <h2>Dijkstra (OSPF) algorithm demo</h2>
+    <h3>Shortest path from a vertex (node) to all other nodes in a weighted graph </h3>
+  </header>
+
+  <div id="test_type">
+    <p>- Detailed description of the algorithm can be found in <a href="https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm">Wikipedia</a><br>
+      - Choose the number of nodes (10 - 1000), a random graph (network) will be generated.<br>
+      - Click <b>Draw</b> to draw (or re-draw) a graph<br>
+      - Click <b>Start</b> to run the algorithm.
+    </p>
+
+    <input id="graph_size" type="number" min="10" max="1000" value="25">
+    <button id="draw" type="button" name="draw" value="draw">Draw Graph</button>
+    <button id="start" type="button" name="start" value="start">Start</button>
+  </div>
+
+
+  <div id="graph"></div>
+
+  <input id="dest" type="number" min="10" max="1000" value="">
+  <button id="path" type="button" name="path" value="path">Draw Path</button>
+
+  
+  <div class="toast">
+    <div class="toast-content">
+      <div class="check"></div>
+      <div class="message">
+        <span class="text text-1">Success</span>
+        <span class="text text-2">Your changes has been saved</span>
+      </div>
+    </div>  
+    <span href="#" class="close">&times;</span>
+    <div class="progress"></div>
+  </div>
+  </div> <!-- end of content -->
+
+  <footer>Made at BBQ on Nov 17, 2023. Just for fun. 100% recycled code. <span style="color: #000; font-weight: 900;">&Ropf;<sup>3</sup></span></footer>
+
+  <script defer src="js/vendor/modernizr-3.12.0.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.27.0/cytoscape.min.js" integrity="sha512-ZNCw/dHSJygOg60ih5fI0f2RKqa8EeVm2ivm3PcrD6SEv2WzK8VJoe5IxS4QzvLcaSIQeaxgZMRCW01QlVJTZA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>  
+  <script defer src="js/st.js"></script>
+  <script defer src="js/toast.js"></script>
+</body>
+</html>
