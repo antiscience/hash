@@ -111,7 +111,7 @@ const getGraphData = M => {
 
 const drawGraph = data => { 
 
-    return cytoscape({
+    const cy = cytoscape({
 
     container: document.getElementById('graph'),
   
@@ -128,13 +128,15 @@ const drawGraph = data => {
       {
         selector: 'node',
         style: {
-          //'shape': 'rectangle',
-          'height': '10px',
-          'width': '10px',
+          'height': '12px',
+          'width': '12px',
           'label': 'data(id)',
           'background-color': '#34465D',
-          'color': '#1E88E5',
-          'font-size': '14px'
+          'font-size': '14px',
+          'text-background-color': '#222',
+          'text-background-opacity': 1,
+          'color': '#fff',
+          'text-background-padding': '3px',
         }
       },
       { 
@@ -144,9 +146,9 @@ const drawGraph = data => {
         'width': 1,
         'label': 'data(weight)',
         'line-color': '#34465D',
-        'text-background-color': '#222222',
+        'text-background-color': '#eee',
         'text-background-opacity': 1,
-        'color': '#ffffff',
+        'color': '#222',
         'text-background-padding': '2px',
         'font-size': '11px'
         }
@@ -155,27 +157,51 @@ const drawGraph = data => {
         selector: '.current_node',
         css: {
                 'background-color': '#BD081C',
-                'width': '20px',
-                'height': '20px'
+                'width': '15px',
+                'height': '15px'
             }
        },
        {
         selector: '.current_neighbor',
         css: {
-                'line-color': '#1877F2',
+                'line-color': '#DF2029',
                 'width': 3,
             }
        },
        {
         selector: '.added_edge',
         css: {
-                'line-color': '#DF2029',
+                'line-color': '#1DA1F2',
                 'width': 3
             }
-       }
+       },
+       {
+        selector: '.path',
+        css: {
+                'line-color': '#FF3300',
+                'width': 4
+            }
+       },
+       {
+        selector: '.root',
+        css: {
+                'background-color': '#25D366',
+                'width': '20px',
+                'height': '20px',
+                'text-background-color': '#FF5700',
+                'text-background-padding': '4px',
+                'text-background-opacity': 1,
+                'color': 'white'
+            }
+       },
     ]
   })
+
+  cy.getElementById(G.root).style('label', 'ROOT').addClass('root');
+  return cy;
 }
+
+const id = (one, two) => [one, two].sort((x, y) => x -y).join('-');
 
 const callback_current = async current => {
     const c = G.cy.getElementById(current);
@@ -185,25 +211,25 @@ const callback_current = async current => {
 
 const callback_neighbor_start = async (c, n) => { 
 
-    let id = n > c ? c+'-'+n : n+'-'+c; 
-    G.cy.getElementById(id).addClass('current_neighbor');
+    let e = id(c, n); 
+    G.cy.getElementById(e).addClass('current_neighbor');
     await sleep(150);
 }
 
 const callback_neighbor_end = async (c, n) => { 
 
-    let id = n > c ? c+'-'+n : n+'-'+c; 
-    G.cy.getElementById(id).removeClass('current_neighbor'); 
+    let e = id(c, n); 
+    G.cy.getElementById(e).removeClass('current_neighbor'); 
     await sleep(20); 
 }
 
 const callback_hop = async (c, o, n) => { 
 
-    let id = n > c ? c+'-'+n : n+'-'+c;
-    G.cy.getElementById(id).addClass('added_edge');
+    let e = id(c, n);
+    G.cy.getElementById(e).addClass('added_edge');
 
-    id = o > c ? c+'-'+o : o+'-'+c;
-    G.cy.getElementById(id).removeClass('added_edge');
+    e = id(n, o); console.log(c, o, e)
+    G.cy.getElementById(e).removeClass('added_edge'); 
 
     await sleep(100);
 }
@@ -213,7 +239,7 @@ const sleep = ms => {
 }
 
 
-const G = { cy: null, Matrix: null, Gdata: null }
+const G = { root: 0, cy: null, Matrix: null, Gdata: null }
 
 const size_input = document.getElementById("graph_size");
 const draw = document.getElementById("draw");
@@ -225,22 +251,45 @@ draw.addEventListener("click", () => {
 
     if (G.cy) G.cy.elements().remove();
     G.cy = null;
+    path.disabled = true;
 
     const size = parseInt(size_input.value); 
     G.Matrix = getRandomMatrix(size); 
     G.Gdata = getGraphData(G.Matrix);
     G.cy = drawGraph(G.Gdata); 
+
+    start.disabled = false;
 })
 
 start.addEventListener("click", () => {
 
-    G.res = Dijkstra(G.Matrix, 0);
+    draw.disabled = true;
+    start.disabled = true;
+    Dijkstra(G.Matrix, 0)
+        .then(res => { 
+            G.res = res;
+            path.disabled = false;
+            draw.disabled = false;
+        }
+    )
 })
 
 path.addEventListener("click", () => {
 
-    const dest = parseInt(dest.value); 
-    const path = Gpath(dest, G.res.Hops);
+    const destination = parseInt(dest.value); 
+    if (destination == G.root) return;
+
+    const pathArr = Gpath(destination, G.res.Hops); console.log(pathArr)
+    let pathTo = [], e;
+
+    for (let i = 1; i < pathArr.length; i++ ) {
+
+        e = id(pathArr[i-1], pathArr[i]);
+        pathTo.push(e);
+        G.cy.getElementById(e).addClass('path');
+        //await sleep(500);
+    }
+    console.log(pathTo)
 
 })
    

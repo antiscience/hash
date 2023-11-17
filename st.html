@@ -39,21 +39,24 @@
 
   <div id="test_type">
     <p>- Detailed description of the algorithm can be found in <a href="https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm">Wikipedia</a><br>
-      - Choose the number of nodes (10 - 1000), a random graph (network) will be generated.<br>
-      - Click <b>Draw</b> to draw (or re-draw) a graph<br>
-      - Click <b>Start</b> to run the algorithm.
+      - Choose the number of nodes, a random graph (network) will be generated.<br>
+      - Click <b>Draw</b> to draw (or re-draw) a graph, then <b>Start</b> to run the algorithm.<br>
+      - Nodes are numbered. Edge weights and the root node are depicted. <br>
+      - The result is a tree (no loops), consisting of all shortest paths from every node to ROOT.<br>
+      - Beneath the graph is the input to draw a path to any (node by its number).
     </p>
 
-    <input id="graph_size" type="number" min="10" max="1000" value="25">
+    <input id="graph_size" type="number" min="10" max="1000" value="20">
     <button id="draw" type="button" name="draw" value="draw">Draw Graph</button>
-    <button id="start" type="button" name="start" value="start">Start</button>
+    <button id="start" type="button" name="start" value="start" disabled>Start</button>
   </div>
 
 
   <div id="graph"></div>
 
+  <br>
   <input id="dest" type="number" min="10" max="1000" value="">
-  <button id="path" type="button" name="path" value="path">Draw Path</button>
+  <button id="path" type="button" name="path" value="path" disabled>Draw Path</button>
 
   
   <div class="toast">
