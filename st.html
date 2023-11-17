@@ -26,6 +26,8 @@
       height: 600px;
       border: 10px solid #ECEFF1;
     }
+
+    #dest { width: 3em; }
   </style>
 </head>
 
@@ -42,7 +44,7 @@
       - Choose the number of nodes, a random graph (network) will be generated.<br>
       - Click <b>Draw</b> to draw (or re-draw) a graph, then <b>Start</b> to run the algorithm.<br>
       - Nodes are numbered. Edge weights and the root node are depicted. <br>
-      - The result is a tree (no loops), consisting of all shortest paths from every node to ROOT.<br>
+      - The result is a tree (should be no loops, let me know asap if you find one), consisting of all shortest paths from every node to ROOT.<br>
       - Beneath the graph is the input to draw a path to any (node by its number).
     </p>
 
@@ -55,7 +57,7 @@
   <div id="graph"></div>
 
   <br>
-  <input id="dest" type="number" min="10" max="1000" value="">
+  <input id="dest" type="number" value="">
   <button id="path" type="button" name="path" value="path" disabled>Draw Path</button>
 
   

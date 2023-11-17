@@ -13,7 +13,7 @@ const Dijkstra = async (Matrix, start) => {
 
         // Get a vertice with the min distance to start from Queue
         let index = 0;
-        let current = Qeue[index]; //console.log(Distances, Qeue)
+        let current = Qeue[index]; 
         let min = Distances[current]; 
         
         for (let i = 0; i < Qeue.length; i++) {
@@ -71,7 +71,7 @@ const Gpath = (u, Hops) => {
 const getRandomMatrix = N => {
 
     const M = [];
-    const randEdge = () => Math.round(Math.random() - 0.2);
+    const randEdge = () => Math.round(Math.random() - 0.3);
     const randDist = () => Math.floor(Math.random()*N + 1);
 
     for (let i = 0; i < N; i++) {
@@ -228,7 +228,7 @@ const callback_hop = async (c, o, n) => {
     let e = id(c, n);
     G.cy.getElementById(e).addClass('added_edge');
 
-    e = id(n, o); console.log(c, o, e)
+    e = id(n, o); 
     G.cy.getElementById(e).removeClass('added_edge'); 
 
     await sleep(100);
@@ -239,7 +239,7 @@ const sleep = ms => {
 }
 
 
-const G = { root: 0, cy: null, Matrix: null, Gdata: null }
+const G = { root: 0, cy: null, Matrix: null, Gdata: null, pathTo: [] }
 
 const size_input = document.getElementById("graph_size");
 const draw = document.getElementById("draw");
@@ -274,22 +274,23 @@ start.addEventListener("click", () => {
     )
 })
 
-path.addEventListener("click", () => {
+path.addEventListener("click", async () => {
 
+    if (G.pathTo.length) G.pathTo.forEach(e => G.cy.getElementById(e).removeClass('path'));
     const destination = parseInt(dest.value); 
     if (destination == G.root) return;
+    if (destination > G.Matrix.length) return;
 
-    const pathArr = Gpath(destination, G.res.Hops); console.log(pathArr)
-    let pathTo = [], e;
+    const pathArr = Gpath(destination, G.res.Hops); 
+    let e;
 
     for (let i = 1; i < pathArr.length; i++ ) {
 
         e = id(pathArr[i-1], pathArr[i]);
-        pathTo.push(e);
+        G.pathTo.push(e);
         G.cy.getElementById(e).addClass('path');
-        //await sleep(500);
+        await sleep(300);
     }
-    console.log(pathTo)
 
 })
    
