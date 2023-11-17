@@ -71,13 +71,13 @@ const Gpath = (u, Hops) => {
 const getRandomMatrix = N => {
 
     const M = [];
-    const randEdge = () => Math.round(Math.random() - 0.3);
+    const randEdge = () => Math.round(Math.random() - .3);
     const randDist = () => Math.floor(Math.random()*N + 1);
 
     for (let i = 0; i < N; i++) {
         M[i] = [];
         for (let j = 0; j < i; j++ ) M[i][j] = M[j][i];
-        for (let j = i + 1; j < N; j++) M[i][j] = randEdge() ? randDist() : 0;
+        for (let j = i + 1; j < N; j++) M[i][j] = randEdge() > 0 ? randDist() : 0;
         M[i][i] = 0;
     }
     
