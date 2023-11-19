@@ -196,7 +196,7 @@ input:not([type=checkbox]):not([type=radio]),
 input[type=range],
 select,
 textarea {
- -webkit-appearance:none
+ -webkit-appearance:none;
 }
 textarea {
  display:block;
@@ -233,9 +233,6 @@ textarea:focus {
 }
 button:active,
 input[type=button]:active,
-input[type=checkbox]:active,
-input[type=radio]:active,
-input[type=range]:active,
 input[type=reset]:active,
 input[type=submit]:active {
  transform:translateY(2px)

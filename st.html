@@ -24,10 +24,12 @@
     #graph {
       width: 800px; 
       height: 600px;
-      border: 10px solid #ECEFF1;
+      background-color: #000;
     }
 
-    #dest { width: 3em; }
+    #dest, #graph_size { width: 4em; margin-left: 0; }
+    select, label { display: inline-block; }
+
   </style>
 </head>
 
@@ -40,26 +42,29 @@
   </header>
 
   <div id="test_type">
-    <p>- Detailed description of the algorithm can be found in <a href="https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm">Wikipedia</a><br>
+    <p>- Detailed description of the algorithm: <a href="https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm">Wikipedia</a><br>
       - Choose the number of nodes, a random graph (network) will be generated.<br>
       - Click <b>Draw</b> to draw (or re-draw) a graph, then <b>Start</b> to run the algorithm.<br>
-      - Nodes are numbered. Edge weights and the root node are depicted. <br>
       - The result is a tree (should be no loops, let me know asap if you find one), consisting of all shortest paths from every node to ROOT.<br>
-      - Beneath the graph is the input to draw a path to any node (by its number).<br>
-      - Thanks to <a href="https://js.cytoscape.org/">Cytoscape.js</a> all nodes can be moved around with your mouse.
+      - Click on any node to see the shortest path to root.<br>
+      - Thanks to <a href="https://js.cytoscape.org/">Cytoscape.js</a> all nodes are clickable and moveable.
     </p>
 
-    <input id="graph_size" type="number" min="10" max="1000" value="20">
+    <input id="graph_size" type="number" min="10" max="1000" value="30">
     <button id="draw" type="button" name="draw" value="draw">Draw Graph</button>
-    <button id="start" type="button" name="start" value="start" disabled>Start</button>
+    <label for="speed">Choose speed:</label>
+    <select name="speed" id="speed">
+      <option value="800">Slow</option>
+      <option value="250" selected>Normal</option>
+      <option value="1">Fast</option>
+    </select>
+      <button id="start" type="button" name="start" value="start" disabled>Start</button>
+      <br>   
   </div>
 
 
-  <div id="graph"></div>
+  <div id="graph" class="hidden"></div>
 
-  <br>
-  <input id="dest" type="number" value="">
-  <button id="path" type="button" name="path" value="path" disabled>Draw Path</button>
 
   
   <div class="toast">
@@ -73,6 +78,7 @@
     <span href="#" class="close">&times;</span>
     <div class="progress"></div>
   </div>
+
   </div> <!-- end of content -->
 
   <footer>Made at BBQ on Nov 17, 2023. Just for fun. 100% recycled code. <span style="color: #000; font-weight: 900;">&Ropf;<sup>3</sup></span></footer>

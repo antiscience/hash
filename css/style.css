@@ -297,7 +297,9 @@ button.active:hover {
 }
 
 button:focus,
-input:focus,
+input:focus {
+  box-shadow: none;
+}
 textarea:focus {
   box-shadow: 0 0 0 1px #aaa;
 }
@@ -356,7 +358,7 @@ footer {
 
 input {
   display: inline-block;
-  vertical-align: baseline;
+  vertical-align: middle;
   margin-left: 20px;
 }
 

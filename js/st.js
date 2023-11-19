@@ -71,13 +71,13 @@ const Gpath = (u, Hops) => {
 const getRandomMatrix = N => {
 
     const M = [];
-    const randEdge = () => Math.round(Math.random() - .3);
-    const randDist = () => Math.floor(Math.random()*N + 1);
+    const randEdge = () => Math.random() < 3.5/N ? true : false; // we want ? edges per node in average - binomial 
+    const randDist = () => Math.floor(Math.random()*(N -1)) + 1;
 
     for (let i = 0; i < N; i++) {
         M[i] = [];
+        for (let j = i + 1; j < N; j++) M[i][j] = randEdge() ? randDist() : 0;
         for (let j = 0; j < i; j++ ) M[i][j] = M[j][i];
-        for (let j = i + 1; j < N; j++) M[i][j] = randEdge() > 0 ? randDist() : 0;
         M[i][i] = 0;
     }
     
@@ -109,149 +109,226 @@ const getGraphData = M => {
     return Gdata;
 }
 
+
 const drawGraph = data => { 
 
-    const cy = cytoscape({
+    cy = cytoscape(
+    {   container: document.getElementById('graph'),
 
-    container: document.getElementById('graph'),
-  
-    elements: data,
-  
-    layout: {
-      name: 'random',
-      animate: true, 
-      animationDuration: 500,
-      animationEasing: 'ease-in' 
-    },
-  
-    style: [
-      {
-        selector: 'node',
-        style: {
-          'height': '12px',
-          'width': '12px',
-          'label': 'data(id)',
-          'background-color': '#34465D',
-          'font-size': '14px',
-          'text-background-color': '#222',
-          'text-background-opacity': 1,
-          'color': '#fff',
-          'text-background-padding': '3px',
-        }
-      },
-      { 
-        selector: 'edge',
-        style: {
-        //'curve-style': 'unbundled-bezier',
-        'width': 1,
-        'label': 'data(weight)',
-        'line-color': '#34465D',
-        'text-background-color': '#eee',
-        'text-background-opacity': 1,
-        'color': '#222',
-        'text-background-padding': '2px',
-        'font-size': '11px'
-        }
-      },
-      {
-        selector: '.current_node',
-        css: {
-                'background-color': '#BD081C',
-                'width': '15px',
-                'height': '15px'
-            }
-       },
-       {
-        selector: '.current_neighbor',
-        css: {
-                'line-color': '#DF2029',
-                'width': 3,
-            }
-       },
-       {
-        selector: '.added_edge',
-        css: {
-                'line-color': '#1DA1F2',
-                'width': 3
-            }
-       },
-       {
-        selector: '.path',
-        css: {
-                'line-color': '#FF3300',
-                'width': 4
-            }
-       },
-       {
-        selector: '.root',
-        css: {
-                'background-color': '#25D366',
-                'width': '20px',
-                'height': '20px',
-                'text-background-color': '#FF5700',
-                'text-background-padding': '4px',
-                'text-background-opacity': 1,
-                'color': 'white'
-            }
-       },
-    ]
-  })
+        elements: data,
 
-  cy.getElementById(G.root).style('label', 'ROOT').addClass('root');
-  return cy;
+        layout: {
+            name: 'random',
+            padding: 30, 
+            animate: true, 
+            animationDuration: 500,
+            animationEasing: 'ease-in' 
+        },
+        style: [
+        {
+            selector: 'node',
+            style: {
+            'height': '16px',
+            'width': '16px',
+            //  'label': 'data(id)',
+            'text-background-opacity': 1,
+            'text-background-padding': '3px',
+
+            'background-color': 'white',
+            'border-color': 'black',
+            'border-width': '3px',
+            //'content': 'data(id)',
+            'min-zoomed-font-size': 16,
+            'color': '#fff',
+            'font-size': '16',
+            'z-index': 100,
+            }
+        },
+        { 
+            selector: 'edge',
+            style: {
+            //'label': 'data(weight)',
+
+            'min-zoomed-font-size': 36,
+            'font-size': 8,
+            'color': '#fff',
+            'line-color': 'white',
+            'width': 1,
+            'curve-style': 'haystack',
+            'haystack-radius': 0,
+            'opacity': 0.7
+            }
+        },
+        {
+            selector: 'node.current',
+            css: {
+                    'background-color': '#FF6600',
+                    'width': '15px',
+                    'height': '15px',
+                    'opacity': 1
+            }
+        },
+        {
+            selector: 'edge.neighbor',
+            css: {
+                    'line-color': 'red',
+                    'width': 3,
+                    'opacity': 0.8,
+                    'z-index': 2
+            }
+        },
+        {
+            selector: 'edge.added',
+            css: {
+                    'line-color': '#00C300',
+                    'width': 3,
+                    'opacity': 0.8,
+                    'z-index': 3
+            }
+        },
+        {
+            selector: 'edge.path',
+            css: {
+                    'line-color': 'red',
+                    'width': 4,
+                    'opacity': 1,
+                    'z-index': 5
+            }
+        },
+        {
+            selector: 'node.root',
+            css: {
+                    'background-color': '#0061FF',
+                    'width': '25px',
+                    'height': '25px',
+                    'text-background-color': '#000',
+                    'text-background-padding': '6px',
+                    'text-background-opacity': 0,
+                    'color': 'white',
+                    'text-halign': 'center',
+                    'text-valign': 'top',
+                    'opacity': 0.8
+            }
+        },
+        {
+            selector: 'node.start',
+            css: {
+                'height': 25,
+                'width': 25,
+                'min-zoomed-font-size': 0,
+                'font-size': 20,
+                'border-color': '#000',
+                'border-width': '5px',
+                'text-outline-color': '#000',
+                'text-outline-width': '10px',
+                'z-index': 9999,
+                'background-color': '#FC4C4C',
+                'color': '#FC4C4C',
+                'opacity': 0.9
+            }
+        },
+        {
+            selector: 'node.path',
+            css: {
+                'height': 20,
+                'width': 20,
+                'border-color': '#000',
+                'border-width': '5px',
+                'z-index': 9999,
+                'background-color': '#FC4C4C',
+                'color': '#FC4C4C',
+                'opacity': 1
+            }
+        },
+        {
+            selector: 'edge.not-path',
+            css: 
+            {
+                'opacity': 0.4,
+                'z-index': 0,
+            }
+        },
+        {
+            selector: 'node.not-path',
+            css: {
+                'opacity': 0.4,
+                'z-index': 0
+              }
+        }
+        ]
+    });
+
+    cy.getElementById(G.root)
+    .style('label', 'ROOT')
+    .addClass('root')
+    .animate({
+        position: { x: 40, y: 40 },
+    }, {
+    duration: 500
+    });
+
+    cy.nodes().on('click', e => {
+        if (G.ready) drawPath(e.target.id())
+        else showToast('Info', 'Algorithm must be run and finish first - Press "Start" and wait', 1)
+    })
+
+    return cy;
 }
 
 const id = (one, two) => [one, two].sort((x, y) => x -y).join('-');
 
 const callback_current = async current => {
     const c = G.cy.getElementById(current);
-    c.addClass('current_node');
-    await sleep(50);
+    c.addClass('current');
+    await sleep();
 }
 
 const callback_neighbor_start = async (c, n) => { 
 
     let e = id(c, n); 
-    G.cy.getElementById(e).addClass('current_neighbor');
-    await sleep(150);
+    G.cy.getElementById(e).addClass('neighbor');
+    await sleep(200);
 }
 
 const callback_neighbor_end = async (c, n) => { 
 
     let e = id(c, n); 
-    G.cy.getElementById(e).removeClass('current_neighbor'); 
-    await sleep(20); 
+    G.cy.getElementById(e).removeClass('neighbor'); 
+    await sleep(100); 
 }
 
 const callback_hop = async (c, o, n) => { 
 
     let e = id(c, n);
-    G.cy.getElementById(e).addClass('added_edge');
+    G.cy.getElementById(e).addClass('added');
 
     e = id(n, o); 
-    G.cy.getElementById(e).removeClass('added_edge'); 
+    G.cy.getElementById(e).removeClass('added'); 
 
-    await sleep(100);
+    await sleep();
 }
 
-const sleep = ms => {
-    return new Promise(resolve => setTimeout(resolve, ms));
+const sleep = (speed) => {
+
+    speed = speed || G.speed;
+    return new Promise(resolve => setTimeout(resolve, speed));
 }
 
 
-const G = { root: 0, cy: null, Matrix: null, Gdata: null, pathTo: [] }
+const G = { root: 0, cy: null, Matrix: null, Gdata: null, speed: 300 }
+//fetch('css/tokyo.cycss').then(res => { G.style = res.text() });
 
+const view = document.getElementById("graph");
 const size_input = document.getElementById("graph_size");
 const draw = document.getElementById("draw");
 const start = document.getElementById("start");
-const dest = document.getElementById("dest");
-const path = document.getElementById("path");
+const speed = document.getElementById("speed");
 
 draw.addEventListener("click", () => {
 
+    view.className = "";
     if (G.cy) G.cy.elements().remove();
     G.cy = null;
-    path.disabled = true;
 
     const size = parseInt(size_input.value); 
     G.Matrix = getRandomMatrix(size); 
@@ -265,32 +342,51 @@ start.addEventListener("click", () => {
 
     draw.disabled = true;
     start.disabled = true;
+    G.speed = speed.value;
+
     Dijkstra(G.Matrix, 0)
-        .then(res => { 
+        .then(res => 
+        { 
             G.res = res;
-            path.disabled = false;
+            G.ready = true;
             draw.disabled = false;
         }
     )
 })
 
-path.addEventListener("click", async () => {
+const drawPath = async (node) => {
 
-    if (G.pathTo.length) G.pathTo.forEach(e => G.cy.getElementById(e).removeClass('path'));
-    const destination = parseInt(dest.value); 
-    if (destination == G.root) return;
-    if (destination > G.Matrix.length) return;
+    const start = parseInt(node);
+    G.cy.filter('edge.path').removeClass('path');
+    G.cy.filter('node.start').removeClass('start');
+    G.cy.filter('node.path').removeClass('path');
+    G.cy.filter('edge.not-path').removeClass('not-path');
+    G.cy.filter('node.not-path').removeClass('not-path');
 
-    const pathArr = Gpath(destination, G.res.Hops); 
-    let e;
+    if (start == G.root || start > G.Matrix.length) return;
+
+    G.cy.getElementById(start).addClass('start');
+    const pathArr = Gpath(start, G.res.Hops); 
+    let e = [], n = [start]
 
     for (let i = 1; i < pathArr.length; i++ ) {
 
-        e = id(pathArr[i-1], pathArr[i]);
-        G.pathTo.push(e);
-        G.cy.getElementById(e).addClass('path');
-        await sleep(300);
+        n1 = pathArr[i-1];
+        n2 = pathArr[i];
+        e.push(id(n1, n2));
+        n.push(n2);
     }
 
-})
-   
+    G.cy.edges().addClass('not-path');
+    G.cy.nodes().addClass('not-path');
+
+    for (let i = 0; i < e.length; i++ ) {
+
+        G.cy.getElementById(e[i]).addClass('path');
+        await sleep(50);
+        G.cy.getElementById(n[i]).addClass('path');
+        await sleep(100);
+    }
+    //G.cy.edges().difference('edge.path').addClass('not-path');
+    //G.cy.nodes().difference('node.path').addClass('not-path');
+}
