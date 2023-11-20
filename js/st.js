@@ -400,6 +400,4 @@ const drawPath = async (node) => {
         G.cy.getElementById(n[i]).removeClass('not-path').addClass('path');
         await sleep(100);
     }
-    //G.cy.edges().difference('edge.path').addClass('not-path');
-    //G.cy.nodes().difference('node.path').addClass('not-path');
 }
