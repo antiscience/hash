@@ -142,6 +142,7 @@ const drawGraph = data => {
             'color': '#fff',
             'font-size': '16',
             'z-index': 100,
+            'cursor': 'pointer'
             }
         },
         { 
@@ -189,9 +190,9 @@ const drawGraph = data => {
         {
             selector: 'edge.path',
             css: {
-                    'line-color': 'red',
+                    'line-color': '#0099FF',
                     'width': 4,
-                    'opacity': 1,
+                    'opacity': .8,
                     'z-index': 5
             }
         },
@@ -223,8 +224,8 @@ const drawGraph = data => {
                 'text-outline-width': '10px',
                 'z-index': 9999,
                 'background-color': '#FC4C4C',
-                'color': '#FC4C4C',
-                'opacity': 0.9
+                'color': 'red',
+                'opacity': 1
             }
         },
         {
@@ -236,7 +237,7 @@ const drawGraph = data => {
                 'border-width': '5px',
                 'z-index': 9999,
                 'background-color': '#FC4C4C',
-                'color': '#FC4C4C',
+                'color': 'red',
                 'opacity': 1
             }
         },
@@ -251,8 +252,7 @@ const drawGraph = data => {
         {
             selector: 'node.not-path',
             css: {
-                'opacity': 0.4,
-                'z-index': 0
+                'opacity': 0.7,
               }
         }
         ]
@@ -287,14 +287,14 @@ const callback_neighbor_start = async (c, n) => {
 
     let e = id(c, n); 
     G.cy.getElementById(e).addClass('neighbor');
-    await sleep(200);
+    await sleep();
 }
 
 const callback_neighbor_end = async (c, n) => { 
 
     let e = id(c, n); 
     G.cy.getElementById(e).removeClass('neighbor'); 
-    await sleep(100); 
+    await sleep(); 
 }
 
 const callback_hop = async (c, o, n) => { 
@@ -382,9 +382,9 @@ const drawPath = async (node) => {
 
     for (let i = 0; i < e.length; i++ ) {
 
-        G.cy.getElementById(e[i]).addClass('path');
+        G.cy.getElementById(e[i]).removeClass('not-path').addClass('path');
         await sleep(50);
-        G.cy.getElementById(n[i]).addClass('path');
+        G.cy.getElementById(n[i]).removeClass('not-path').addClass('path');
         await sleep(100);
     }
     //G.cy.edges().difference('edge.path').addClass('not-path');
