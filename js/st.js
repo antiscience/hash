@@ -192,7 +192,7 @@ const drawGraph = data => {
             css: {
                     'line-color': '#0099FF',
                     'width': 4,
-                    'opacity': .8,
+                    'opacity': 1,
                     'z-index': 5
             }
         },
