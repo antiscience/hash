@@ -8,6 +8,8 @@ const Dijkstra = async (Matrix, start) => {
     Distances[start] = 0;
     Hops[start] = -1;
 
+    let iterations = 0;
+
     // Main
     while (Qeue.length) {
 
@@ -15,6 +17,7 @@ const Dijkstra = async (Matrix, start) => {
         let index = 0;
         let current = Qeue[index]; 
         let min = Distances[current]; 
+        iterations++;
         
         for (let i = 0; i < Qeue.length; i++) {
             let v = Qeue[i];
@@ -28,7 +31,7 @@ const Dijkstra = async (Matrix, start) => {
 
         if (min === -1) break; // exit early: no more connected vertices
 
-        await callback_current(current);
+        await callback_current(current, iterations);
         Qeue.splice(index, 1);
 
         // For all neighbors of current in Qeue
@@ -277,9 +280,12 @@ const drawGraph = data => {
 
 const id = (one, two) => [one, two].sort((x, y) => x -y).join('-');
 
-const callback_current = async current => {
+const callback_current = async (current, iterations) => {
     const c = G.cy.getElementById(current);
     c.addClass('current');
+    mon_current.textContent = ' '+current;
+    mon_total.textContent = ' '+iterations;
+
     await sleep();
 }
 
@@ -287,6 +293,7 @@ const callback_neighbor_start = async (c, n) => {
 
     let e = id(c, n); 
     G.cy.getElementById(e).addClass('neighbor');
+    mon_neighbor.textContent = ' '+n;
     await sleep();
 }
 
@@ -304,6 +311,8 @@ const callback_hop = async (c, o, n) => {
 
     e = id(n, o); 
     G.cy.getElementById(e).removeClass('added'); 
+
+    mon_hop.textContent = ' '+(o ? n+'-/->'+o : '1st hop')+' >> '+n+' --> ' + c;
 
     await sleep();
 }
@@ -323,6 +332,10 @@ const size_input = document.getElementById("graph_size");
 const draw = document.getElementById("draw");
 const start = document.getElementById("start");
 const speed = document.getElementById("speed");
+const mon_current = document.getElementById("mon-current");
+const mon_neighbor = document.getElementById("mon-neighbor");
+const mon_hop = document.getElementById("mon-hop");
+const mon_total = document.getElementById("mon-total");
 
 draw.addEventListener("click", () => {
 

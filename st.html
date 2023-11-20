@@ -30,6 +30,14 @@
     #dest, #graph_size { width: 4em; margin-left: 0; }
     select, label { display: inline-block; }
 
+    #monitor {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #000;
+      color: #eee;
+      font-family: monospace;
+      font-size: 11px;
+    }
   </style>
 </head>
 
@@ -64,7 +72,12 @@
 
 
   <div id="graph" class="hidden"></div>
-
+  <div id="monitor">
+    <div><span>Currently visited node:</span><span id="mon-current"></span></div>
+    <div><span>Totally visited:</span><span id="mon-total"></span></div>
+    <div><span>Checking noeighbor node:</span><span id="mon-neighbor"></span></div>
+    <div><span>Hop updated: </span><span id="mon-hop"></span></div>
+  </div>
 
   
   <div class="toast">
